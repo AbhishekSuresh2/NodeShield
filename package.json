@@ -1,8 +1,11 @@
 {
   "name": "nodeguard",
   "version": "1.0.0",
-  "description": "An Advanced Nodejs Process Manager",
+  "description": "An Advanced Node.js Process Manager",
   "main": "index.js",
+  "scripts": {
+    "nodeguard": "node ./index.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/AbhishekSuresh2/NodeGuard.git"
@@ -12,7 +15,6 @@
   },
   "dependencies": {
     "chalk": "^4.1.2",
-    "cluster": "^0.7.7",
     "figlet": "^1.5.0",
     "minimist": "^1.2.8"
   },
@@ -25,7 +27,8 @@
   ],
   "author": "Abhishek Suresh",
   "license": "MIT",
-  "scripts": {
-    "nodeguard": "node ./index.js"
-  }
+  "bugs": {
+    "url": "https://github.com/AbhishekSuresh2/NodeGuard/issues"
+  },
+  "homepage": "https://github.com/AbhishekSuresh2/NodeGuard#readme"
 }
