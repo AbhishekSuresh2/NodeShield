@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "An Advanced Nodejs Process Manager",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AbhishekSuresh2/NodeGuard.git"
+  },
   "bin": {
     "nodeguard": "./index.js"
   },
