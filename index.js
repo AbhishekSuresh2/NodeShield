@@ -7,16 +7,16 @@ const minimist = require('minimist');
 let processes = {};
 
 const args = minimist(process.argv.slice(2)); // Parse arguments
-const processName = args.name || 'NodeGuard'; // Default name if --name is not provided
+const processName = args.name || 'NodeShield'; // Default name if --name is not provided
 
 const showWelcomeMessage = () => {
-  figlet('Node Guard', { font: 'Slant', width: 100 }, (err, result) => {
+  figlet('Node Shield', { font: 'Slant', width: 100 }, (err, result) => {
     if (err) {
       log.error('Error generating welcome message: ', err);
       return;
     }
     console.log(result);
-    log.info('NodeGuard is now running and ready to monitor your application.');
+    log.info('NodeShield is now running and ready to monitor your application.');
   });
 };
 
