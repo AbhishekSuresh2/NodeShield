@@ -1,6 +1,3 @@
-Here's a sample `README.md` for your `NodeGuard` application, styled similarly to the example from PM2:
-
-```markdown
 # NodeGuard
 
 NodeGuard is a simple process manager for Node.js applications. It helps to monitor, manage, and keep your Node.js applications running indefinitely. NodeGuard supports clustering for load balancing and zero downtime reloading, offering you a robust solution for production environments.
@@ -78,30 +75,27 @@ Run your application in cluster mode, utilizing all available CPU cores:
 nodeguard start <script.js> --name <process_name> --env <environment> --cluster
 ```
 
-### Logs
-
-View logs for a specific process:
-
-```bash
-nodeguard logs <process_name>
-```
-
-### Monitoring
-
-Monitor all processes using the built-in monitoring tool:
+### Example 1: Simple Version
+For beginners or those who don't need to specify the environment:
 
 ```bash
-nodeguard monit
+$ nodeguard start app.js --name MyApp
+NodeGuard is now running and ready to monitor your application.
+MyApp Process started in development mode (PID: 12345).
 ```
 
-## Example
+### Example 2: Detailed Version (for advanced users or production setup)
+For users who want to explicitly specify the environment as **production**:
 
 ```bash
 $ nodeguard start app.js --name MyApp --env production
 NodeGuard is now running and ready to monitor your application.
 MyApp Process started in production mode (PID: 12345).
 ```
-
+### Explanation for Users:
+- **Simple Version**: This command starts the application with the default environment (development mode).
+- **Detailed Version**: This command explicitly sets the environment to **production**, which may be necessary for certain configurations (like in live environments).
+ 
 ### Cluster Mode Example
 
 Start an application in cluster mode with multiple workers:
