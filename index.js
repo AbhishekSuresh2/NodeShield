@@ -25,7 +25,7 @@ const formatProcessName = (name) => `[${name}]`;
 
 const startProcess = (script, env) => {
   if (processes[script]) {
-    log.warn(`${formatProcessName(processName)} Process Is Already Running.`);
+    log.warn(`${formatProcessName(processName)} Process is already Running.`);
     return;
   }
 
@@ -53,7 +53,7 @@ const startProcess = (script, env) => {
   });
 
   process.on('SIGTERM', () => {
-    log.success(`${formatProcessName(processName)} Gracefully stopping.`);
+    log.success(`${formatProcessName(processName)} Gracefully stopping...`);
   });
 
   processes[script] = process;
@@ -61,7 +61,7 @@ const startProcess = (script, env) => {
 };
 
 const restartOnError = (script, env) => {
-  log.info(`${formatProcessName(processName)} Restarting after crash...`);
+  log.info(`${formatProcessName(processName)} Crashed Restarting...`);
   setTimeout(() => {
     startProcess(script, env);
   }, 5000);
@@ -95,7 +95,7 @@ const stopProcess = (name) => {
   }
   processes[name].kill('SIGTERM');
   delete processes[name];
-  log.success(`${formatProcessName(name)} Stopped process.`);
+  log.success(`${formatProcessName(name)} Process stopped.`);
 };
 
 const restartProcess = (name) => {
