@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 const { spawn, exec } = require('child_process');
 const os = require('os');
 const cluster = require('cluster');
