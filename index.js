@@ -17,7 +17,7 @@ const showWelcomeMessage = () => {
       return;
     }
     console.log(result);
-    log.success('NodeGuard is ready to protect your app!');
+    log.success('NodeGuard Is Alive And Ready To Protect Your App!');
   });
 };
 
@@ -25,11 +25,11 @@ const formatProcessName = (name) => `[${name}]`;
 
 const startProcess = (script, env) => {
   if (processes[script]) {
-    log.warn(`${formatProcessName(processName)} Process is already running.`);
+    log.warn(`${formatProcessName(processName)} Process Is Already Running.`);
     return;
   }
 
-  showWelcomeMessage(); // Show the welcome message when starting the process
+  showWelcomeMessage();
 
   const processEnv = { NODE_ENV: env };
   const process = spawn('node', [script], { env: { ...process.env, ...processEnv } });
