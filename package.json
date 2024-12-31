@@ -1,17 +1,14 @@
 {
   "name": "@abhisheksuresh2/nodeshield",
   "version": "1.0.3",
-  "description": "An Advanced Nodejs Process Manager",
+  "description": "An Advanced Node.js Process Manager",
   "main": "index.js",
-  "scripts": {
-    "nodeshield": "node ./index.js"
+  "bin": {
+    "nodeshield": "./bin/nodeshield.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AbhishekSuresh2/NodeShield.git"
-  },
-  "bin": {
-    "nodeshield": "./bin/nodeshield.js"
+    "url": "https://github.com/AbhishekSuresh2/NodeShield.git"
   },
   "dependencies": {
     "chalk": "^4.1.2",
@@ -19,30 +16,30 @@
     "minimist": "^1.2.8"
   },
   "keywords": [
-  "nodeshield",
-  "node-monitor",
-  "process-manager",
-  "nodejs-utilities",
-  "app-monitoring",
-  "cluster-management",
-  "child-process",
-  "node-protection",
-  "node-security",
-  "application-monitor",
-  "server-health",
-  "performance-monitoring",
-  "restart-on-crash",
-  "load-balancer",
-  "server-clustering",
-  "nodejs-tools",
-  "developer-tools",
-  "process-restart",
-  "crash-handler",
-  "server-management",
-  "runtime-monitor",
-  "abhisheksuresh2", 
-  "pm2",
-  "nodejs-monitor"
+    "nodeshield",
+    "node-monitor",
+    "process-manager",
+    "nodejs-utilities",
+    "app-monitoring",
+    "cluster-management",
+    "child-process",
+    "node-protection",
+    "node-security",
+    "application-monitor",
+    "server-health",
+    "performance-monitoring",
+    "restart-on-crash",
+    "load-balancer",
+    "server-clustering",
+    "nodejs-tools",
+    "developer-tools",
+    "process-restart",
+    "crash-handler",
+    "server-management",
+    "runtime-monitor",
+    "abhisheksuresh2",
+    "pm2",
+    "nodejs-monitor"
   ],
   "author": "Abhishek Suresh",
   "license": "MIT",
