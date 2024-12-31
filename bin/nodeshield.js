@@ -2,7 +2,7 @@ const { spawn, exec } = require('child_process');
 const os = require('os');
 const cluster = require('cluster');
 const figlet = require('figlet');
-const log = require('./logger');
+const log = require('../lib/logger');
 const minimist = require('minimist');
 let processes = {};
 
