@@ -1,10 +1,14 @@
 {
-  "name": "@abhisheksuresh2/nodeshield",
-  "version": "1.0.5",
-  "description": "An Advanced Node.js Process Manager",
+  "name": "nodeshield",
+  "version": "1.0.0",
+  "description": "A lightweight process manager for Node.js applications, similar to PM2.",
   "main": "index.js",
   "bin": {
-    "nodeshield": "./bin/nodeshield.js"
+    "nodeshield": "./cli.js"
+  },
+  "scripts": {
+    "start": "node cli.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
