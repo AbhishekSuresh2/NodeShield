@@ -1,6 +1,6 @@
 {
   "name": "@abhisheksuresh2/nodeshield",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An Advanced Nodejs Process Manager",
   "main": "index.js",
   "scripts": {
@@ -18,7 +18,32 @@
     "figlet": "^1.5.0",
     "minimist": "^1.2.8"
   },
-  "keywords": ["nodeshield", "abhisheksuresh2"],
+  "keywords": [
+  "nodeshield",
+  "node-monitor",
+  "process-manager",
+  "nodejs-utilities",
+  "app-monitoring",
+  "cluster-management",
+  "child-process",
+  "node-protection",
+  "node-security",
+  "application-monitor",
+  "server-health",
+  "performance-monitoring",
+  "restart-on-crash",
+  "load-balancer",
+  "server-clustering",
+  "nodejs-tools",
+  "developer-tools",
+  "process-restart",
+  "crash-handler",
+  "server-management",
+  "runtime-monitor",
+  "abhisheksuresh2", 
+  "pm2",
+  "nodejs-monitor"
+  ],
   "author": "Abhishek Suresh",
   "license": "MIT",
   "bugs": {
