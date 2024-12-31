@@ -1,10 +1,10 @@
 {
   "name": "nodeshield",
-  "version": "1.0.0",
+  "version": "1.0.8",
   "description": "A lightweight process manager for Node.js applications, similar to PM2.",
   "main": "index.js",
   "bin": {
-    "nodeshield": "./cli.js"
+    "nodeshield": "./index.js"
   },
   "scripts": {
     "start": "node cli.js",
