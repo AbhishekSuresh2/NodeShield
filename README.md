@@ -18,7 +18,7 @@ NodeGuard is a simple process manager for Node.js applications. It helps to moni
 You can install `NodeGuard` globally or locally using `npm`.
 
 ```bash
-npm install -g nodeguard
+npm install -g @abhisheksuresh2/nodeguard
 ```
 
 ## Usage
