@@ -6,8 +6,8 @@ const log = require('./logger');
 const minimist = require('minimist');
 let processes = {};
 
-const args = minimist(process.argv.slice(2)); // Parse arguments
-const processName = args.name || 'NodeShield'; // Default name if --name is not provided
+const args = minimist(process.argv.slice(2)); 
+const processName = args.name || 'NodeShield';
 
 const showWelcomeMessage = () => {
   figlet('Node Shield', { font: 'Slant', width: 100 }, (err, result) => {
@@ -44,7 +44,7 @@ const startProcess = (script, env) => {
   process.on('close', (code) => {
     if (code !== 0) {
       log.error(`${formatProcessName(processName)} Process terminated with exit code ${code}. Restarting...`);
-      restartOnError(script, env); // Restart the process
+      restartOnError(script, env);
     } else {
       log.info(`${formatProcessName(processName)} Process exited successfully.`);
     }
@@ -83,7 +83,7 @@ const startClusteredProcess = (script, env) => {
       }
     });
   } else {
-    startProcess(script, env); // Start the process on each worker
+    startProcess(script, env);
   }
 };
 
@@ -108,7 +108,20 @@ const showProcessInfo = (name) => {
     log.error(`${formatProcessName(name)} Process not found.`);
     return;
   }
-  log.info(`${formatProcessName(name)} Process is running with PID: ${processes[name].pid}`);
+
+  const processDetails = processes[name];
+  const env = processDetails.env.NODE_ENV || 'unknown'; 
+  const pid = processDetails.pid; 
+  const port = processDetails.port || 'Not specified'; 
+  const script = processDetails.spawnargs[0]; 
+  const status = processDetails.killed ? 'Stopped' : 'Running';
+  
+  log.info(`${formatProcessName(name)} Process Info:`);
+  log.info(`- PID: ${pid}`);
+  log.info(`- Port: ${port}`);
+  log.info(`- Script: ${script}`);
+  log.info(`- Environment Mode: ${env}`);
+  log.info(`- Status: ${status}`)
 };
 
 const listProcesses = () => {
@@ -123,10 +136,9 @@ const listProcesses = () => {
   });
 };
 
-// Command handling based on arguments
 const handleCommand = () => {
-  const command = args._[0]; // First command argument (e.g. start, stop, restart)
-  const scriptName = args._[1] || processName; // Default to processName if not specified
+  const command = args._[0]; 
+  const scriptName = args._[1] || processName; 
 
   if (command === 'start') {
     startProcess(scriptName, args.env || 'development');
@@ -143,4 +155,4 @@ const handleCommand = () => {
   }
 };
 
-handleCommand(); // Execute the command
+handleCommand();
