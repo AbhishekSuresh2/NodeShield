@@ -57,5 +57,5 @@ if (_[0] === 'start') {
 } else if (_[0] === 'list') {
   listProcesses();
 } else {
-  log.error('Unknown command');
+  log.error('Command not found!');
 }
