@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AbhishekSuresh2/abhisheksuresh2-nodeguard.git"
+    "url": "git+https://github.com/AbhishekSuresh2/NodeGuard.git"
   },
   "bin": {
     "nodeguard": "./index.js"
@@ -28,7 +28,7 @@
   "author": "Abhishek Suresh",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/AbhishekSuresh2/abhisheksuresh2-nodeguard/issues"
+    "url": "https://github.com/AbhishekSuresh2/NodeGuard/issues"
   },
-  "homepage": "https://github.com/AbhishekSuresh2/abhisheksuresh2-nodeguard#readme"
+  "homepage": "https://github.com/AbhishekSuresh2/NodeGuard#readme"
 }
