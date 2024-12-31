@@ -1,18 +1,16 @@
 {
   "name": "nodeguard",
   "version": "1.0.0",
-  "description": "An advanced Node.js process manager with auto-restart, clustering, and more.",
+  "description": "An Advanced Nodejs Process Manager",
   "main": "index.js",
   "bin": {
     "nodeguard": "./index.js"
   },
-  "scripts": {
-    "start": "node index.js"
-  },
   "dependencies": {
     "chalk": "^4.1.2",
     "cluster": "^0.7.7",
-    "figlet": "^1.5.0"
+    "figlet": "^1.5.0",
+    "minimist": "^1.2.8"
   },
   "keywords": [
     "nodejs",
@@ -22,5 +20,8 @@
     "nodeguard"
   ],
   "author": "Abhishek Suresh",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "nodeguard": "node ./index.js"
+  }
 }
