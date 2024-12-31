@@ -1,7 +1,7 @@
 {
   "name": "@abhisheksuresh2/nodeguard",
   "version": "1.0.0",
-  "description": "An Advanced Process Manager",
+  "description": "An Advanced Nodejs Process Manager",
   "main": "index.js",
   "scripts": {
     "nodeguard": "node ./index.js"
