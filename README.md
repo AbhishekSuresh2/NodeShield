@@ -1,5 +1,3 @@
-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
-
 # NodeShield
 
 NodeShield is a simple process manager for Node.js applications. It helps to monitor, manage, and keep your Node.js applications running indefinitely. NodeShield supports clustering for load balancing and zero downtime reloading, offering you a robust solution for production environments.
