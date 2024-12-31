@@ -1,6 +1,8 @@
-# NodeGuard
+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
 
-NodeGuard is a simple process manager for Node.js applications. It helps to monitor, manage, and keep your Node.js applications running indefinitely. NodeGuard supports clustering for load balancing and zero downtime reloading, offering you a robust solution for production environments.
+# NodeShield
+
+NodeShield is a simple process manager for Node.js applications. It helps to monitor, manage, and keep your Node.js applications running indefinitely. NodeShield supports clustering for load balancing and zero downtime reloading, offering you a robust solution for production environments.
 
 ## Features
 
@@ -15,24 +17,24 @@ NodeGuard is a simple process manager for Node.js applications. It helps to moni
 
 ## Installation
 
-You can install `NodeGuard` globally or locally using `npm`.
+You can install `NodeShield` globally or locally using `npm`.
 
 ```bash
-npm install -g @abhisheksuresh2/nodeguard
+npm install -g nodeshield
 ```
 
 ## Usage
 
 ### Start a Process
 
-Start a Node.js application with NodeGuard by specifying the script name and the environment:
+Start a Node.js application with NodeShield by specifying the script name and the environment:
 
 ```bash
-nodeguard start <script.js> --name <process_name> --env <environment>
+nodeshield start <script.js> --name <process_name> --env <environment>
 ```
 
 - `script.js` is the Node.js script you want to run.
-- `process_name` is an optional name for the process (defaults to `NodeGuard`).
+- `process_name` is an optional name for the process (defaults to `NodeShield`).
 - `environment` specifies the environment to run the process in (default is `development`).
 
 ### Stop a Process
@@ -40,7 +42,7 @@ nodeguard start <script.js> --name <process_name> --env <environment>
 Stop a running process:
 
 ```bash
-nodeguard stop <process_name>
+nodeshield stop <process_name>
 ```
 
 ### Restart a Process
@@ -48,7 +50,7 @@ nodeguard stop <process_name>
 Restart a process:
 
 ```bash
-nodeguard restart <process_name>
+nodeshield restart <process_name>
 ```
 
 ### Get Process Information
@@ -56,7 +58,7 @@ nodeguard restart <process_name>
 Display detailed information about a running process:
 
 ```bash
-nodeguard info <process_name>
+nodeshield info <process_name>
 ```
 
 ### List Running Processes
@@ -64,7 +66,7 @@ nodeguard info <process_name>
 List all currently running processes:
 
 ```bash
-nodeguard list
+nodeshield list
 ```
 
 ### Start Clustered Processes
@@ -72,15 +74,15 @@ nodeguard list
 Run your application in cluster mode, utilizing all available CPU cores:
 
 ```bash
-nodeguard start <script.js> --name <process_name> --env <environment> --cluster
+nodeshield start <script.js> --name <process_name> --env <environment> --cluster
 ```
 
 ### Example 1: Simple Version
 For beginners or those who don't need to specify the environment:
 
 ```bash
-$ nodeguard start app.js --name MyApp
-NodeGuard is now running and ready to monitor your application.
+$ nodeshield start app.js --name MyApp
+NodeShield is now running and ready to monitor your application.
 MyApp Process started in development mode (PID: 12345).
 ```
 
@@ -88,8 +90,8 @@ MyApp Process started in development mode (PID: 12345).
 For users who want to explicitly specify the environment as **production**:
 
 ```bash
-$ nodeguard start app.js --name MyApp --env production
-NodeGuard is now running and ready to monitor your application.
+$ nodeshield start app.js --name MyApp --env production
+NodeShield is now running and ready to monitor your application.
 MyApp Process started in production mode (PID: 12345).
 ```
 ### Explanation for Users:
@@ -101,7 +103,7 @@ MyApp Process started in production mode (PID: 12345).
 Start an application in cluster mode with multiple workers:
 
 ```bash
-$ nodeguard start app.js --name MyApp --env production --cluster
+$ nodeshield start app.js --name MyApp --env production --cluster
 ```
 
 ## Commands
@@ -114,20 +116,20 @@ $ nodeguard start app.js --name MyApp --env production --cluster
 
 ## Process Management
 
-NodeGuard automatically manages the lifecycle of your applications. If a process crashes, it will be restarted after 5 seconds. You can also monitor the health of your processes and cluster workers.
+NodeShield automatically manages the lifecycle of your applications. If a process crashes, it will be restarted after 5 seconds. You can also monitor the health of your processes and cluster workers.
 
 ### Clustering
 
-NodeGuard supports running your Node.js applications in cluster mode, which allows you to utilize multiple CPU cores and scale your application efficiently. This increases overall performance and reliability.
+NodeShield supports running your Node.js applications in cluster mode, which allows you to utilize multiple CPU cores and scale your application efficiently. This increases overall performance and reliability.
 
 To start your application in cluster mode, use the `--cluster` flag:
 
 ```bash
-nodeguard start <script.js> --cluster
+nodeshield start <script.js> --cluster
 ```
 
 This will spawn multiple worker processes, balancing the load between them.
 
 ## License
 
-NodeGuard is licensed under the MIT License.
+NodeShield is licensed under the MIT License.
