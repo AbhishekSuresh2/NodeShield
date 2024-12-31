@@ -3,11 +3,10 @@ const os = require('os');
 const cluster = require('cluster');
 const figlet = require('figlet');
 const log = require('../lib/logger');
-const minimist = require('minimist');
+
 let processes = {};
 
-const args = minimist(process.argv.slice(2)); 
-const processName = args.name || 'NodeShield';
+const processName = 'NodeShield';
 
 const showWelcomeMessage = () => {
   figlet('Node Shield', { font: 'Slant', width: 100 }, (err, result) => {
@@ -66,27 +65,6 @@ const restartOnError = (script, env) => {
   }, 5000);
 };
 
-const startClusteredProcess = (script, env) => {
-  if (cluster.isMaster) {
-    const numWorkers = os.cpus().length;
-
-    log.info(`${formatProcessName(processName)} Spawning ${numWorkers} worker(s) for load balancing.`);
-
-    for (let i = 0; i < numWorkers; i++) {
-      cluster.fork();
-    }
-
-    cluster.on('exit', (worker, code, signal) => {
-      if (code !== 0) {
-        log.error(`${formatProcessName(processName)} Worker ${worker.process.pid} died unexpectedly. Restarting...`);
-        cluster.fork();
-      }
-    });
-  } else {
-    startProcess(script, env);
-  }
-};
-
 const stopProcess = (name) => {
   if (!processes[name]) {
     log.error(`${formatProcessName(name)} Process not found.`);
@@ -121,7 +99,7 @@ const showProcessInfo = (name) => {
   log.info(`- Port: ${port}`);
   log.info(`- Script: ${script}`);
   log.info(`- Environment Mode: ${env}`);
-  log.info(`- Status: ${status}`)
+  log.info(`- Status: ${status}`);
 };
 
 const listProcesses = () => {
@@ -136,23 +114,10 @@ const listProcesses = () => {
   });
 };
 
-const handleCommand = () => {
-  const command = args._[0]; 
-  const scriptName = args._[1] || processName; 
-
-  if (command === 'start') {
-    startProcess(scriptName, args.env || 'development');
-  } else if (command === 'stop') {
-    stopProcess(scriptName);
-  } else if (command === 'restart') {
-    restartProcess(scriptName);
-  } else if (command === 'info') {
-    showProcessInfo(scriptName);
-  } else if (command === 'list') {
-    listProcesses();
-  } else {
-    log.error('Invalid command. Available commands are: start, stop, restart, info, or list.');
-  }
+module.exports = {
+  startProcess,
+  stopProcess,
+  restartProcess,
+  showProcessInfo,
+  listProcesses
 };
-
-handleCommand();
