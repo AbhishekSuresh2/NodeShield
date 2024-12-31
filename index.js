@@ -3,7 +3,11 @@ const os = require('os');
 const cluster = require('cluster');
 const figlet = require('figlet');
 const log = require('./logger');
+const minimist = require('minimist');
 let processes = {};
+
+const args = minimist(process.argv.slice(2)); // Parse arguments
+const processName = args.name || 'NodeGuard'; // Default name if --name is not provided
 
 const showWelcomeMessage = () => {
   figlet('Node Guard', { font: 'Slant', width: 100 }, (err, result) => {
@@ -17,9 +21,11 @@ const showWelcomeMessage = () => {
   });
 };
 
-const startProcess = (script, env, name = 'NodeGuard') => {
+const formatProcessName = (name) => `[${name}]`;
+
+const startProcess = (script, env) => {
   if (processes[script]) {
-    log.warn(`Process ${name} is already running.`);
+    log.warn(`${formatProcessName(processName)} Process is already running.`);
     return;
   }
 
@@ -29,43 +35,43 @@ const startProcess = (script, env, name = 'NodeGuard') => {
   const process = spawn('node', [script], { env: { ...process.env, ...processEnv } });
 
   process.stdout.on('data', (data) => {
-    log.info(`[${name}] ${data}`);
+    log.info(`${formatProcessName(processName)} ${data}`);
   });
 
   process.stderr.on('data', (data) => {
-    log.error(`[${name}] Error: ${data}`);
+    log.error(`${formatProcessName(processName)} Error: ${data}`);
   });
 
   process.on('close', (code) => {
     if (code !== 0) {
-      log.error(`[${name}] Process crashed with exit code ${code}. Restarting...`);
-      restartOnError(script, env, name); // Restart the process
+      log.error(`${formatProcessName(processName)} Process crashed with exit code ${code}. Restarting...`);
+      restartOnError(script, env); // Restart the process
     } else {
-      log.success(`[${name}] Process exited successfully.`);
+      log.success(`${formatProcessName(processName)} Process exited successfully.`);
     }
     delete processes[script];
   });
 
   process.on('SIGTERM', () => {
-    log.success(`[${name}] Gracefully stopping.`);
+    log.success(`${formatProcessName(processName)} Gracefully stopping.`);
   });
 
   processes[script] = process;
-  log.success(`[${name}] Process started in ${env} mode (PID: ${process.pid}).`);
+  log.success(`${formatProcessName(processName)} Process started in ${env} mode (PID: ${process.pid}).`);
 };
 
-const restartOnError = (script, env, name) => {
-  log.info(`[${name}] Restarting after crash...`);
+const restartOnError = (script, env) => {
+  log.info(`${formatProcessName(processName)} Restarting after crash...`);
   setTimeout(() => {
-    startProcess(script, env, name);
-  }, 5000); // Restart after 5 seconds
+    startProcess(script, env);
+  }, 5000);
 };
 
-const startClusteredProcess = (script, env, name) => {
+const startClusteredProcess = (script, env) => {
   if (cluster.isMaster) {
     const numWorkers = os.cpus().length;
 
-    log.info(`[${name}] Spawning ${numWorkers} worker(s) for load balancing.`);
+    log.info(`${formatProcessName(processName)} Spawning ${numWorkers} worker(s) for load balancing.`);
 
     for (let i = 0; i < numWorkers; i++) {
       cluster.fork();
@@ -73,42 +79,70 @@ const startClusteredProcess = (script, env, name) => {
 
     cluster.on('exit', (worker, code, signal) => {
       if (code !== 0) {
-        log.error(`[${name}] Worker ${worker.process.pid} died unexpectedly. Restarting...`);
+        log.error(`${formatProcessName(processName)} Worker ${worker.process.pid} died unexpectedly. Restarting...`);
         cluster.fork();
       }
     });
   } else {
-    startProcess(script, env, name); // Start the process on each worker
+    startProcess(script, env); // Start the process on each worker
   }
 };
 
-const stopProcess = (script, name) => {
-  if (!processes[script]) {
-    log.error(`[${name}] Process not found.`);
+const stopProcess = (name) => {
+  if (!processes[name]) {
+    log.error(`${formatProcessName(name)} Process not found.`);
     return;
   }
-  processes[script].kill('SIGTERM');
-  delete processes[script];
-  log.success(`[${name}] Stopped process.`);
+  processes[name].kill('SIGTERM');
+  delete processes[name];
+  log.success(`${formatProcessName(name)} Stopped process.`);
 };
 
-const shutdownAllProcesses = () => {
-  log.info('Shutting down all processes...');
-  Object.keys(processes).forEach((script) => {
-    processes[script].kill('SIGTERM');
+const restartProcess = (name) => {
+  log.info(`${formatProcessName(name)} Restarting process...`);
+  stopProcess(name);
+  startProcess(name);
+};
+
+const showProcessInfo = (name) => {
+  if (!processes[name]) {
+    log.error(`${formatProcessName(name)} Process not found.`);
+    return;
+  }
+  log.info(`${formatProcessName(name)} Process running with PID: ${processes[name].pid}`);
+};
+
+const listProcesses = () => {
+  const processNames = Object.keys(processes);
+  if (processNames.length === 0) {
+    log.info('No processes are currently running.');
+    return;
+  }
+  log.info('Running Processes:');
+  processNames.forEach((name) => {
+    log.info(`${formatProcessName(name)} Process with PID: ${processes[name].pid}`);
   });
 };
 
-process.on('SIGINT', () => {
-  log.success('Received SIGINT. Shutting down...');
-  shutdownAllProcesses();
-  process.exit(0);
-});
+// Command handling based on arguments
+const handleCommand = () => {
+  const command = args._[0]; // First command argument (e.g. start, stop, restart)
+  const scriptName = args._[1] || processName; // Default to processName if not specified
 
-process.on('SIGTERM', () => {
-  log.success('Received SIGTERM. Shutting down...');
-  shutdownAllProcesses();
-  process.exit(0);
-});
+  if (command === 'start') {
+    startProcess(scriptName, args.env || 'development');
+  } else if (command === 'stop') {
+    stopProcess(scriptName);
+  } else if (command === 'restart') {
+    restartProcess(scriptName);
+  } else if (command === 'info') {
+    showProcessInfo(scriptName);
+  } else if (command === 'list') {
+    listProcesses();
+  } else {
+    log.error('Invalid command. Use start, stop, restart, info, or list.');
+  }
+};
 
-module.exports = { startProcess, startClusteredProcess, stopProcess, shutdownAllProcesses };
+handleCommand(); // Execute the command
+
