@@ -18,7 +18,7 @@ NodeShield is a simple process manager for Node.js applications. It helps to mon
 You can install `NodeShield` globally or locally using `npm`.
 
 ```bash
-npm install -g nodeshield
+npm install -g @abhisheksuresh2/nodeshield
 ```
 
 ## Usage
