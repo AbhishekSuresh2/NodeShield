@@ -1,5 +1,5 @@
 {
-  "name": "@abhisheksuresh2/nodeguard",
+  "name": "nodeshield",
   "version": "1.0.0",
   "description": "An Advanced Nodejs Process Manager",
   "main": "index.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AbhishekSuresh2/NodeGuard.git"
+    "url": "git+https://github.com/AbhishekSuresh2/NodeShield.git"
   },
   "bin": {
     "nodeguard": "./index.js"
@@ -28,7 +28,7 @@
   "author": "Abhishek Suresh",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/AbhishekSuresh2/NodeGuard/issues"
+    "url": "https://github.com/AbhishekSuresh2/NodeShield/issues"
   },
-  "homepage": "https://github.com/AbhishekSuresh2/NodeGuard#readme"
+  "homepage": "https://github.com/AbhishekSuresh2/NodeShield#readme"
 }
