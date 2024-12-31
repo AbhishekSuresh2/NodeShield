@@ -1,20 +1,61 @@
-const minimist = require('minimist');
 const { startProcess, stopProcess, restartProcess, showProcessInfo, listProcesses } = require('./bin/nodeshield');
+const log = require('./lib/logger');
+const yargs = require('yargs');
 
-const args = minimist(process.argv.slice(2));
-const command = args._[0];
-const scriptName = args._[1] || 'NodeShield';
+const args = yargs
+  .command('start [script]', 'Start a process', {
+    script: {
+      description: 'The script to run',
+      type: 'string',
+      default: '.',
+    },
+    name: {
+      description: 'The name of the process',
+      type: 'string',
+      default: 'NodeShield',
+    },
+    env: {
+      description: 'The environment to run the process in',
+      type: 'string',
+      choices: ['development', 'production'],
+      default: 'development',
+    },
+  })
+  .command('stop [name]', 'Stop a running process', {
+    name: {
+      description: 'The name of the process to stop',
+      type: 'string',
+    },
+  })
+  .command('restart [name]', 'Restart a running process', {
+    name: {
+      description: 'The name of the process to restart',
+      type: 'string',
+    },
+  })
+  .command('info [name]', 'Get information about a running process', {
+    name: {
+      description: 'The name of the process to get information on',
+      type: 'string',
+    },
+  })
+  .command('list', 'List all running processes')
+  .help()
+  .alias('h', 'help')
+  .argv;
 
-if (command === 'start') {
-  startProcess(scriptName, args.env || 'development');
-} else if (command === 'stop') {
-  stopProcess(scriptName);
-} else if (command === 'restart') {
-  restartProcess(scriptName);
-} else if (command === 'info') {
-  showProcessInfo(scriptName);
-} else if (command === 'list') {
+const { _ } = args;
+
+if (_[0] === 'start') {
+  startProcess(args.script, args.env, args.name);
+} else if (_[0] === 'stop') {
+  stopProcess(args.name);
+} else if (_[0] === 'restart') {
+  restartProcess(args.name);
+} else if (_[0] === 'info') {
+  showProcessInfo(args.name);
+} else if (_[0] === 'list') {
   listProcesses();
 } else {
-  console.error('Invalid command. Available commands are: start, stop, restart, info, or list.');
+  log.error('Unknown command');
 }
