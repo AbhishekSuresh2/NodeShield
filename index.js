@@ -12,12 +12,11 @@ const processName = args.name || 'NodeGuard'; // Default name if --name is not p
 const showWelcomeMessage = () => {
   figlet('Node Guard', { font: 'Slant', width: 100 }, (err, result) => {
     if (err) {
-      log.error('Error generating welcome message');
-      console.dir(err);
+      log.error('Error generating welcome message: ', err);
       return;
     }
     console.log(result);
-    log.success('NodeGuard Is Alive And Ready To Protect Your App!');
+    log.info('NodeGuard is now running and ready to monitor your application.');
   });
 };
 
@@ -25,7 +24,7 @@ const formatProcessName = (name) => `[${name}]`;
 
 const startProcess = (script, env) => {
   if (processes[script]) {
-    log.warn(`${formatProcessName(processName)} Process is already Running.`);
+    log.warn(`${formatProcessName(processName)} Process is already running.`);
     return;
   }
 
@@ -35,7 +34,7 @@ const startProcess = (script, env) => {
   const process = spawn('node', [script], { env: { ...process.env, ...processEnv } });
 
   process.stdout.on('data', (data) => {
-    log.info(`${formatProcessName(processName)} ${data}`);
+    log.debug(`${formatProcessName(processName)} Output: ${data}`);
   });
 
   process.stderr.on('data', (data) => {
@@ -44,24 +43,24 @@ const startProcess = (script, env) => {
 
   process.on('close', (code) => {
     if (code !== 0) {
-      log.error(`${formatProcessName(processName)} Process crashed with exit code ${code}. Restarting...`);
+      log.error(`${formatProcessName(processName)} Process terminated with exit code ${code}. Restarting...`);
       restartOnError(script, env); // Restart the process
     } else {
-      log.success(`${formatProcessName(processName)} Process exited successfully.`);
+      log.info(`${formatProcessName(processName)} Process exited successfully.`);
     }
     delete processes[script];
   });
 
   process.on('SIGTERM', () => {
-    log.success(`${formatProcessName(processName)} Gracefully stopping...`);
+    log.info(`${formatProcessName(processName)} Gracefully shutting down...`);
   });
 
   processes[script] = process;
-  log.success(`${formatProcessName(processName)} Process started in ${env} mode (PID: ${process.pid}).`);
+  log.info(`${formatProcessName(processName)} Process started in ${env} mode (PID: ${process.pid}).`);
 };
 
 const restartOnError = (script, env) => {
-  log.info(`${formatProcessName(processName)} Crashed Restarting...`);
+  log.warn(`${formatProcessName(processName)} Process crashed. Restarting in 5 seconds...`);
   setTimeout(() => {
     startProcess(script, env);
   }, 5000);
@@ -95,7 +94,7 @@ const stopProcess = (name) => {
   }
   processes[name].kill('SIGTERM');
   delete processes[name];
-  log.success(`${formatProcessName(name)} Process stopped.`);
+  log.info(`${formatProcessName(name)} Process stopped successfully.`);
 };
 
 const restartProcess = (name) => {
@@ -109,7 +108,7 @@ const showProcessInfo = (name) => {
     log.error(`${formatProcessName(name)} Process not found.`);
     return;
   }
-  log.info(`${formatProcessName(name)} Process running with PID: ${processes[name].pid}`);
+  log.info(`${formatProcessName(name)} Process is running with PID: ${processes[name].pid}`);
 };
 
 const listProcesses = () => {
@@ -118,7 +117,7 @@ const listProcesses = () => {
     log.info('No processes are currently running.');
     return;
   }
-  log.info('Running Processes:');
+  log.info('Currently running processes:');
   processNames.forEach((name) => {
     log.info(`${formatProcessName(name)} Process with PID: ${processes[name].pid}`);
   });
@@ -140,9 +139,8 @@ const handleCommand = () => {
   } else if (command === 'list') {
     listProcesses();
   } else {
-    log.error('Invalid command. Use start, stop, restart, info, or list.');
+    log.error('Invalid command. Available commands are: start, stop, restart, info, or list.');
   }
 };
 
 handleCommand(); // Execute the command
-
