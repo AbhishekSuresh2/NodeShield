@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const chalk = require('chalk');
 
-const logFilePath = path.join(__dirname, 'nodeguard.log');
+const logFilePath = path.join(__dirname, 'nodeshield.log');
 const now = new Date();
 const timestamp = `${now.toISOString()}`;
 
