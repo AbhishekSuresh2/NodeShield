@@ -5,65 +5,76 @@ const os = require('os');
 const cluster = require('cluster');
 const figlet = require('figlet');
 const log = require('../lib/logger');
+const numCPUs = os.cpus().length;
 
 let processes = {};
 
-const processName = 'NodeShield';
-
-const showWelcomeMessage = () => {
+const showWelcomeMessage = (name) => {
   figlet('Node Shield', { font: 'Slant', width: 100 }, (err, result) => {
     if (err) {
       log.error('Error generating welcome message: ', err);
       return;
     }
     console.log(result);
-    log.info('NodeShield is now running and ready to monitor your application.');
+    log.info(`${name || 'NodeShield'} is now running and ready to monitor your application.`);
   });
 };
 
 const formatProcessName = (name) => `[${name}]`;
 
-const startProcess = (script, env) => {
-  if (processes[script]) {
-    log.warn(`${formatProcessName(processName)} Process is already running.`);
+const startProcess = (script, env, name) => {
+  if (processes[name]) {
+    log.warn(`${formatProcessName(name)} Process is already running.`);
     return;
   }
 
-  showWelcomeMessage();
+  showWelcomeMessage(name);
 
-  const processEnv = { NODE_ENV: env };
-  const process = spawn('node', [script], { env: { ...process.env, ...processEnv } });
-
-  process.stdout.on('data', (data) => {
-    log.debug(`${formatProcessName(processName)} Output: ${data}`);
-  });
-
-  process.stderr.on('data', (data) => {
-    log.error(`${formatProcessName(processName)} Error: ${data}`);
-  });
-
-  process.on('close', (code) => {
-    if (code !== 0) {
-      log.error(`${formatProcessName(processName)} Process terminated with exit code ${code}. Restarting...`);
-      restartOnError(script, env);
-    } else {
-      log.info(`${formatProcessName(processName)} Process exited successfully.`);
+  if (cluster.isMaster) {
+    log.info('Starting master process with load balancing...');
+    for (let i = 0; i < numCPUs; i++) {
+      cluster.fork();
     }
-    delete processes[script];
-  });
 
-  process.on('SIGTERM', () => {
-    log.info(`${formatProcessName(processName)} Gracefully shutting down...`);
-  });
+    cluster.on('exit', (worker, code, signal) => {
+      log.warn(`Worker ${worker.process.pid} died. Restarting...`);
+      cluster.fork();
+    });
+  } else {
+    const processEnv = { NODE_ENV: env };
+    const process = spawn('node', [script], { env: { ...process.env, ...processEnv } });
 
-  processes[script] = process;
-  log.info(`${formatProcessName(processName)} Process started in ${env} mode (PID: ${process.pid}).`);
+    process.stdout.on('data', (data) => {
+      log.debug(`${formatProcessName(name)} Output: ${data}`);
+    });
+
+    process.stderr.on('data', (data) => {
+      log.error(`${formatProcessName(name)} Error: ${data}`);
+    });
+
+    process.on('close', (code) => {
+      if (code !== 0) {
+        log.error(`${formatProcessName(name)} Process terminated with exit code ${code}. Restarting...`);
+        restartOnError(script, env, name);
+      } else {
+        log.info(`${formatProcessName(name)} Process exited successfully.`);
+      }
+      delete processes[name];
+    });
+
+    process.on('SIGTERM', () => {
+      log.info(`${formatProcessName(name)} Gracefully shutting down...`);
+    });
+
+    processes[name] = process;
+    log.info(`${formatProcessName(name)} Process started in ${env} mode (PID: ${process.pid}).`);
+  }
 };
 
-const restartOnError = (script, env) => {
-  log.warn(`${formatProcessName(processName)} Process crashed. Restarting in 5 seconds...`);
+const restartOnError = (script, env, name) => {
+  log.warn(`${formatProcessName(name)} Process crashed. Restarting in 5 seconds...`);
   setTimeout(() => {
-    startProcess(script, env);
+    startProcess(script, env, name);
   }, 5000);
 };
 
