@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-const processManager = require('./ib/processManager');
-const log = require('./ib/logger');
+const processManager = require("./ib/pm");
+const log = require("./ib/logger");
 
 const args = process.argv.slice(2);
 const command = args[0];
