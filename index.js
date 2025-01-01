@@ -1,61 +1,37 @@
-const { startProcess, stopProcess, restartProcess, showProcessInfo, listProcesses } = require('./bin/nodeshield');
-const log = require('./lib/logger');
-const yargs = require('yargs');
+const processManager = require('./ib/processManager');
+const log = require('./ib/logger');
 
-const args = yargs
-  .command('start [script]', 'Start a process', {
-    script: {
-      description: 'The script to run',
-      type: 'string',
-      default: '.',
-    },
-    name: {
-      description: 'The name of the process',
-      type: 'string',
-      default: 'NodeShield',
-    },
-    env: {
-      description: 'The environment to run the process in',
-      type: 'string',
-      choices: ['development', 'production'],
-      default: 'development',
-    },
-  })
-  .command('stop [name]', 'Stop a running process', {
-    name: {
-      description: 'The name of the process to stop',
-      type: 'string',
-    },
-  })
-  .command('restart [name]', 'Restart a running process', {
-    name: {
-      description: 'The name of the process to restart',
-      type: 'string',
-    },
-  })
-  .command('info [name]', 'Get information about a running process', {
-    name: {
-      description: 'The name of the process to get information on',
-      type: 'string',
-    },
-  })
-  .command('list', 'List all running processes')
-  .help()
-  .alias('h', 'help')
-  .argv;
+const args = process.argv.slice(2);
+const command = args[0];
 
-const { _ } = args;
+switch (command) {
+  case 'start':
+    const script = args[1];
+    const name = args[3] || 'NodeShield';
+    const env = args[5] || 'development';
+    const cluster = args.includes('--cluster');
+    processManager.start(script, name, env, cluster);
+    break;
 
-if (_[0] === 'start') {
-  startProcess(args.script, args.env, args.name);
-} else if (_[0] === 'stop') {
-  stopProcess(args.name);
-} else if (_[0] === 'restart') {
-  restartProcess(args.name);
-} else if (_[0] === 'info') {
-  showProcessInfo(args.name);
-} else if (_[0] === 'list') {
-  listProcesses();
-} else {
-  log.error('Command not found!');
+  case 'stop':
+    const stopName = args[1];
+    processManager.stop(stopName);
+    break;
+
+  case 'restart':
+    const restartName = args[1];
+    processManager.restart(restartName);
+    break;
+
+  case 'info':
+    const infoName = args[1];
+    processManager.info(infoName);
+    break;
+
+  case 'list':
+    processManager.list();
+    break;
+
+  default:
+    log.error('Command not found! Use start, stop, restart, info, or list.');
 }
