@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const processManager = require('./ib/processManager');
 const log = require('./ib/logger');
 
