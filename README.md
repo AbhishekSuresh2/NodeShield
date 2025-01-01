@@ -68,6 +68,8 @@ Feel free to submit issues, create pull requests, or suggest improvements to mak
 
 To get started, please check out our [Contributing Guide](CONTRIBUTING.md) for more information on how you can help.
 
+By contributing, you agree to abide by the [Code of Conduct](CODE_OF_CONDUCT.md).
+
 ## License
 
 NodeShield is licensed under the MIT License. See the [LICENSE](https://opensource.org/licenses/MIT) file for more information.
