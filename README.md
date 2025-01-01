@@ -1,6 +1,6 @@
 # NodeShield
 
-NodeShield is a powerful process manager for Node.js applications. It helps monitor, manage, and keep your applications running indefinitely. With features like clustering, zero-downtime reloading, and error threshold-based restarts, NodeShield ensures robust and seamless operation in production environments.
+NodeShield is a powerful process manager and load balancer for Node.js applications. It efficiently monitors, manages, and scales your applications, ensuring they run indefinitely. With features like advanced clustering, integrated load balancing, zero-downtime reloading, and error threshold-based restarts, NodeShield delivers robust, high-performance, and seamless operations for production environments.
 
 ## Features
 
@@ -64,10 +64,14 @@ NodeShield is running and ready to monitor your application.
 ## Contributing
 
 We welcome contributions to NodeShield!  
-Feel free to submit issues, create pull requests, or suggest improvements to make NodeShield even better.  
+Feel free to submit issues, create pull requests, or suggest improvements to make NodeShield even better.
+
+To get started, please check out our [Contributing Guide](CONTRIBUTING.md) for more information on how you can help.
 
 ## License
 
 NodeShield is licensed under the MIT License. See the [LICENSE](https://opensource.org/licenses/MIT) file for more information.
 
 ## [CHANGELOG](https://github.com/AbhishekSuresh2/NodeShield/tree/main/CHANGELOG.md)
+
+Stay up to date with the latest changes, improvements, and bug fixes in NodeShield by checking out our [CHANGELOG](https://github.com/AbhishekSuresh2/NodeShield/tree/main/CHANGELOG.md).
