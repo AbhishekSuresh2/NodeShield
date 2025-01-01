@@ -14,7 +14,7 @@ log.printBanner();
 log.info("NodeShield Is Now Ready To Manage Your App!");
 
 if (cluster.isMaster) {
-  log.info(processName, `Master process started on ${numCPUs} CPUs`);
+  log.info(processName, `Master process started with ${numCPUs} CPUs`);
 
   for (let i = 0; i < numCPUs; i++) {
     cluster.fork();
@@ -24,12 +24,11 @@ if (cluster.isMaster) {
     log.error(processName, `Worker ${worker.process.pid} died. Forking a new worker.`);
     cluster.fork();
   });
-
 } else {
   switch (command) {
     case 'start':
       const script = args[1];
-      const env = args[5] || 'development';
+      const env = process.env.NODE_ENV || args[2] || 'development';
       const clusterOption = args.includes('--cluster');
       log.info(processName, `Starting process in ${env} mode...`);
       processManager.start(script, processName, env, clusterOption);
