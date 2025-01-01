@@ -12,7 +12,7 @@ const processName = args[3] || 'NodeShield';
 
 log.printBanner();
 log.info("NodeShield Is Now Ready To Manage Your App!");
-         
+
 if (cluster.isMaster) {
   log.info(processName, `Master process started on ${numCPUs} CPUs`);
 
