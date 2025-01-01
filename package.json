@@ -1,14 +1,14 @@
 {
-  "name": "nodeshield",
+  "name": "@abhisheksuresh2/nodeshield",
   "version": "1.0.8",
   "description": "An Advanced Nodejs Process Manager.",
   "main": "index.js",
   "bin": {
-    "nodeshield": "./bin/nodeshield.js"
+    "nodeshield": "./index.js"
   },
   "scripts": {
     "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"No tests specified\" && exit 0"
   },
   "repository": {
     "type": "git",
