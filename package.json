@@ -1,6 +1,6 @@
 {
   "name": "@abhisheksuresh2/nodeshield",
-  "version": "1.0.8",
+  "version": "0.0.1",
   "description": "An Advanced Nodejs Process Manager.",
   "main": "index.js",
   "bin": {
