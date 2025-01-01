@@ -72,6 +72,5 @@ To get started, please check out our [Contributing Guide](CONTRIBUTING.md) for m
 
 NodeShield is licensed under the MIT License. See the [LICENSE](https://opensource.org/licenses/MIT) file for more information.
 
-## [CHANGELOG](https://github.com/AbhishekSuresh2/NodeShield/tree/main/CHANGELOG.md)
-
+## Changelog
 Stay up to date with the latest changes, improvements, and bug fixes in NodeShield by checking out our [CHANGELOG](https://github.com/AbhishekSuresh2/NodeShield/tree/main/CHANGELOG.md).
