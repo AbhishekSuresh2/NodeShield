@@ -12,53 +12,53 @@ const processName = args[3] || 'NodeShield';
 
 let env = args.includes('--env') ? args[args.indexOf('--env') + 1] : 'development';
 
-log.printBanner();
-log.info("NodeShield Is Now Ready To Manage Your App!");
+log.printBanner(env);
+log.info("NodeShield is ready to manage your application.");
 
 if (cluster.isMaster) {
-  log.info(processName, `Master process started with ${numCPUs} CPUs`);
+  log.info(processName, `Master process started. CPU cores: ${numCPUs}`);
 
   for (let i = 0; i < numCPUs; i++) {
     cluster.fork();
   }
 
   cluster.on('exit', (worker, code, signal) => {
-    log.error(processName, `Worker ${worker.process.pid} died. Forking a new worker.`);
+    log.warn(processName, `Worker ${worker.process.pid} exited. Starting a new worker.`);
     cluster.fork();
   });
 } else {
   switch (command) {
     case 'start':
       const script = args[1];
-      log.info(processName, `Starting process in ${env} mode...`);
+      log.info(processName, `Starting process in ${env} mode.`);
       const clusterOption = args.includes('--cluster');
       processManager.start(script, processName, env, clusterOption);
       break;
 
     case 'stop':
       const stopName = args[1];
-      log.info(processName, `Stopping process ${stopName}...`);
+      log.info(processName, `Stopping process ${stopName}.`);
       processManager.stop(stopName);
       break;
 
     case 'restart':
       const restartName = args[1];
-      log.info(processName, `Restarting process ${restartName}...`);
+      log.info(processName, `Restarting process ${restartName}.`);
       processManager.restart(restartName);
       break;
 
     case 'info':
       const infoName = args[1];
-      log.info(processName, `Fetching information for process ${infoName}...`);
+      log.info(processName, `Fetching details for process ${infoName}.`);
       processManager.info(infoName);
       break;
 
     case 'list':
-      log.info(processName, 'Listing all running processes...');
+      log.info(processName, 'Listing all active processes.');
       processManager.list();
       break;
 
     default:
-      log.error(processName, 'Command not found! Use start, stop, restart, info, or list.');
+      log.error(processName, 'Unknown command. Available commands are: start, stop, restart, info, list.');
   }
 }
