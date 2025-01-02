@@ -44,7 +44,7 @@ if (cluster.isMaster) {
       server.unref();
       server.on('error', (err) => {
         if (err.code === 'EADDRINUSE') {
-          tryPort(port + 1);
+          tryPort(port + 1);  
         }
       });
       server.listen(port, () => {
@@ -56,7 +56,7 @@ if (cluster.isMaster) {
     tryPort(port);
   }
 
-  findAvailablePort(3000, (availablePort) => {
+  findAvailablePort(5000, (availablePort) => {
     const loadBalancer = http.createServer((req, res) => {
       const workerIndex = req.socket.remoteAddress.hashCode() % numCPUs;
       const worker = cluster.workers[Object.keys(cluster.workers)[workerIndex]];
