@@ -1,14 +1,27 @@
+---
+
 # Changelog  
 
 All notable changes to this project will be documented in this file.  
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).  
 
-## [0.1.8] - 2025-01-01 
+## [0.1.9] - 2025-01-02  
+  
+### Added  
+- Zero-downtime restart mechanism for improved reliability during application updates.  
+- Enhanced clustering with integrated load balancing for better resource utilization. 
+- Improved error handling.
+
+### Removed  
+- Threshold-based error handling: processes no longer restart after repeated errors.  
+
+---
+
+## [0.1.8] - 2025-01-01  
 
 ### Added  
 - Support for advanced clustering with built-in load balancing.  
-- Zero-downtime reloading for seamless application updates.  
 - Threshold-based error handling: processes now restart only after repeated errors (default: 5 retries).  
 - Detailed process information command (`info`), displaying CPU usage, memory usage, and status.  
 - Graceful shutdown mechanism to prevent data loss during process termination.  
@@ -26,7 +39,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 ### Removed  
 - Immediate process restarts upon single errors (replaced with threshold-based restarts).  
 
-## [0.0.5] - 2024-12-31
+## [0.0.5] - 2024-12-31  
 
 ### Added  
 - Initial release with basic process management functionality.  
@@ -45,3 +58,5 @@ Feel free to contribute by submitting issues or pull requests! For more informat
 ## License  
 
 This project is licensed under the [MIT License](LICENSE).  
+
+---  
