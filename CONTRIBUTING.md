@@ -1,6 +1,5 @@
 ### CONTRIBUTING.md
 
-```markdown
 # Contributing to NodeShield  
 
 Thank you for considering contributing to NodeShield! Contributions are welcome and appreciated. This document provides guidelines to help you get started.  
