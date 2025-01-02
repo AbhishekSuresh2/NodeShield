@@ -5,6 +5,7 @@ const os = require('os');
 const http = require('http');
 const processManager = require('./lib/pm');
 const log = require('./lib/logger');
+const net = require('net');
 
 const numCPUs = os.cpus().length;
 const args = process.argv.slice(2);
@@ -35,24 +36,40 @@ if (cluster.isMaster) {
     }
   });
 
+  function findAvailablePort(port, callback) {
+    const server = net.createServer();
+    server.unref();
+    server.on('error', (err) => {
+      if (err.code === 'EADDRINUSE') {
+        findAvailablePort(port + 1, callback);
+      }
+    });
+    server.listen(port, () => {
+      callback(port);
+      server.close();
+    });
+  }
+
+  findAvailablePort(8000, (availablePort) => {
     const loadBalancer = http.createServer((req, res) => {
-    const workerIndex = req.socket.remoteAddress.hashCode() % numCPUs;
-    const worker = cluster.workers[Object.keys(cluster.workers)[workerIndex]];
+      const workerIndex = req.socket.remoteAddress.hashCode() % numCPUs;
+      const worker = cluster.workers[Object.keys(cluster.workers)[workerIndex]];
 
-    if (worker) {
-      worker.send({ req });
-      worker.once('message', (response) => {
-        res.writeHead(response.statusCode, response.headers);
-        res.end(response.body);
-      });
-    } else {
-      res.writeHead(500);
-      res.end("No workers available .");
-    }
-  });
+      if (worker) {
+        worker.send({ req });
+        worker.once('message', (response) => {
+          res.writeHead(response.statusCode, response.headers);
+          res.end(response.body);
+        });
+      } else {
+        res.writeHead(500);
+        res.end("No workers available.");
+      }
+    });
 
-  loadBalancer.listen(8000, () => {
-    log.info(processName, `Load balancer started on port 8000`);
+    loadBalancer.listen(availablePort, () => {
+      log.info(processName, `Load balancer started on port ${availablePort}`);
+    });
   });
 
 } else {
