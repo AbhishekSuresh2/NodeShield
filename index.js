@@ -64,7 +64,7 @@ if (cluster.isMaster) {
     tryPort();
   }
 
-  const preferredPort = process.env.PORT || 8080;
+  const preferredPort = 8080 || 600;
   findAvailablePort(preferredPort, (availablePort) => {
     const loadBalancer = http.createServer((req, res) => {
       const workerIndex = req.socket.remoteAddress.hashCode() % numCPUs;
