@@ -2,6 +2,7 @@
 
 const cluster = require('cluster');
 const os = require('os');
+const http = require('http');
 const processManager = require('./lib/pm');
 const log = require('./lib/logger');
 
@@ -34,11 +35,39 @@ if (cluster.isMaster) {
     }
   });
 
+    const loadBalancer = http.createServer((req, res) => {
+    const workerIndex = req.socket.remoteAddress.hashCode() % numCPUs;
+    const worker = cluster.workers[Object.keys(cluster.workers)[workerIndex]];
+
+    if (worker) {
+      worker.send({ req });
+      worker.once('message', (response) => {
+        res.writeHead(response.statusCode, response.headers);
+        res.end(response.body);
+      });
+    } else {
+      res.writeHead(500);
+      res.end("No workers available .");
+    }
+  });
+
+  loadBalancer.listen(8000, () => {
+    log.info(processName, `Load balancer started on port 8000`);
+  });
+
 } else {
   process.on('message', (msg) => {
     if (msg === 'shutdown') {
       log.info(processName, `Worker ${process.pid} shutting down gracefully.`);
       process.exit(0);
+    } else if (msg.req) {
+      const { req } = msg;
+      const res = {
+        statusCode: 200,
+        headers: { 'Content-Type': 'text/plain' },
+        body: `Handled by worker ${process.pid}`,
+      };
+      process.send(res);
     }
   });
 
