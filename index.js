@@ -5,7 +5,7 @@ const os = require('os');
 const http = require('http');
 const processManager = require('./lib/pm');
 const log = require('./lib/logger');
-const net = require('net');
+const portfinder = require('portfinder');
 
 const numCPUs = os.cpus().length;
 const args = process.argv.slice(2);
@@ -36,36 +36,12 @@ if (cluster.isMaster) {
     }
   });
 
-  function findAvailablePort(startPort, callback) {
-    let portsToTry = [startPort, startPort + 1, startPort + 2, startPort + 3, startPort + 4, 3000, 4000, 5000];
-    let portIndex = 0;
-
-    function tryPort() {
-      const port = portsToTry[portIndex];
-      const server = net.createServer();
-      server.unref();
-      server.on('error', (err) => {
-        if (err.code === 'EADDRINUSE') {
-          portIndex++;
-          if (portIndex < portsToTry.length) {
-            tryPort();  
-          } else {
-            log.error(processName, 'No available port found!');
-            process.exit(1);
-          }
-        }
-      });
-      server.listen(port, () => {
-        callback(port);  
-        server.close();
-      });
+  portfinder.getPort({ port: 3000 }, function (err, port) {
+    if (err) {
+      log.error(processName, 'Error finding an available port:', err);
+      process.exit(1);
     }
 
-    tryPort();
-  }
-
-  const preferredPort = 8080 || 600;
-  findAvailablePort(preferredPort, (availablePort) => {
     const loadBalancer = http.createServer((req, res) => {
       const workerIndex = req.socket.remoteAddress.hashCode() % numCPUs;
       const worker = cluster.workers[Object.keys(cluster.workers)[workerIndex]];
@@ -82,8 +58,8 @@ if (cluster.isMaster) {
       }
     });
 
-    loadBalancer.listen(availablePort, () => {
-      log.info(processName, `Load balancer started on port ${availablePort}`);
+    loadBalancer.listen(port, () => {
+      log.info(processName, `Load balancer started on port ${port}`);
     });
   });
 
