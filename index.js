@@ -50,7 +50,7 @@ if (cluster.isMaster) {
     });
   }
 
-  findAvailablePort(8000, (availablePort) => {
+  findAvailablePort(8001, (availablePort) => {
     const loadBalancer = http.createServer((req, res) => {
       const workerIndex = req.socket.remoteAddress.hashCode() % numCPUs;
       const worker = cluster.workers[Object.keys(cluster.workers)[workerIndex]];
