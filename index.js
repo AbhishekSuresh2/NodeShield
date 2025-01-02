@@ -36,21 +36,27 @@ if (cluster.isMaster) {
     }
   });
 
-  function findAvailablePort(port, callback) {
-    const server = net.createServer();
-    server.unref();
-    server.on('error', (err) => {
-      if (err.code === 'EADDRINUSE') {
-        findAvailablePort(port + 1, callback);
-      }
-    });
-    server.listen(port, () => {
-      callback(port);
-      server.close();
-    });
+  function findAvailablePort(startPort, callback) {
+    let port = startPort;
+
+    function tryPort(port) {
+      const server = net.createServer();
+      server.unref();
+      server.on('error', (err) => {
+        if (err.code === 'EADDRINUSE') {
+          tryPort(port + 1);
+        }
+      });
+      server.listen(port, () => {
+        callback(port);
+        server.close();
+      });
+    }
+
+    tryPort(port);
   }
 
-  findAvailablePort(8001, (availablePort) => {
+  findAvailablePort(8000, (availablePort) => {
     const loadBalancer = http.createServer((req, res) => {
       const workerIndex = req.socket.remoteAddress.hashCode() % numCPUs;
       const worker = cluster.workers[Object.keys(cluster.workers)[workerIndex]];
