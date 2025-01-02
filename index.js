@@ -26,7 +26,22 @@ if (cluster.isMaster) {
     log.warn(processName, `Worker ${worker.process.pid} exited. Starting a new worker.`);
     cluster.fork();
   });
+
+  process.on('SIGTERM', () => {
+    log.info(processName, 'Master process received SIGTERM, shutting down workers gracefully.');
+    for (const id in cluster.workers) {
+      cluster.workers[id].send('shutdown');
+    }
+  });
+
 } else {
+  process.on('message', (msg) => {
+    if (msg === 'shutdown') {
+      log.info(processName, `Worker ${process.pid} shutting down gracefully.`);
+      process.exit(0);
+    }
+  });
+
   switch (command) {
     case 'start':
       const script = args[1];
