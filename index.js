@@ -37,26 +37,35 @@ if (cluster.isMaster) {
   });
 
   function findAvailablePort(startPort, callback) {
-    let port = startPort;
+    let portsToTry = [startPort, startPort + 1, startPort + 2, startPort + 3, startPort + 4, 3000, 4000, 5000];
+    let portIndex = 0;
 
-    function tryPort(port) {
+    function tryPort() {
+      const port = portsToTry[portIndex];
       const server = net.createServer();
       server.unref();
       server.on('error', (err) => {
         if (err.code === 'EADDRINUSE') {
-          tryPort(port + 1);  
+          portIndex++;
+          if (portIndex < portsToTry.length) {
+            tryPort();  
+          } else {
+            log.error(processName, 'No available port found!');
+            process.exit(1);
+          }
         }
       });
       server.listen(port, () => {
-        callback(port);
+        callback(port);  
         server.close();
       });
     }
 
-    tryPort(port);
+    tryPort();
   }
 
-  findAvailablePort(5000, (availablePort) => {
+  const preferredPort = process.env.PORT || 8080;
+  findAvailablePort(preferredPort, (availablePort) => {
     const loadBalancer = http.createServer((req, res) => {
       const workerIndex = req.socket.remoteAddress.hashCode() % numCPUs;
       const worker = cluster.workers[Object.keys(cluster.workers)[workerIndex]];
