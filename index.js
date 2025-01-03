@@ -17,6 +17,16 @@ let env = args.includes('--env') ? args[args.indexOf('--env') + 1] : 'developmen
 log.printBanner(env);
 log.info("NodeShield is ready to manage your application.");
 
+String.prototype.hashCode = function () {
+  let hash = 0;
+  for (let i = 0; i < this.length; i++) {
+    const char = this.charCodeAt(i);
+    hash = (hash << 5) - hash + char;
+    hash |= 0; 
+  }
+  return hash;
+};
+
 if (cluster.isMaster) {
   log.info(processName, `Master process started. CPU cores: ${numCPUs}`);
 
@@ -43,7 +53,8 @@ if (cluster.isMaster) {
     }
 
     const loadBalancer = http.createServer((req, res) => {
-      const workerIndex = req.socket.remoteAddress.hashCode() % numCPUs;
+      const remoteAddress = req.socket.remoteAddress || '';
+      const workerIndex = Math.abs(remoteAddress.hashCode()) % numCPUs;
       const worker = cluster.workers[Object.keys(cluster.workers)[workerIndex]];
 
       if (worker) {
