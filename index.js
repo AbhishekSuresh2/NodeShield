@@ -46,7 +46,7 @@ if (cluster.isMaster) {
     }
   });
 
-  portfinder.getPort({ port: 3000 }, function (err, port) {
+  portfinder.getPort({ port: 2112 }, function (err, port) {
     if (err) {
       log.error(processName, 'Error finding an available port:', err);
       process.exit(1);
