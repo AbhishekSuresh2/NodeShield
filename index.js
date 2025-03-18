@@ -46,13 +46,9 @@ if (cluster.isMaster) {
     }
   });
 
-  portfinder.getPort({ port: 2112 }, function (err, port) {
-    if (err) {
-      log.error(processName, 'Error finding an available port:', err);
-      process.exit(1);
-    }
-
-    const loadBalancer = http.createServer((req, res) => {
+  portfinder.getPortPromise()
+    .then((port) => {
+        const loadBalancer = http.createServer((req, res) => {         
       const remoteAddress = req.socket.remoteAddress || '';
       const workerIndex = Math.abs(remoteAddress.hashCode()) % numCPUs;
       const worker = cluster.workers[Object.keys(cluster.workers)[workerIndex]];
@@ -70,9 +66,13 @@ if (cluster.isMaster) {
     });
 
     loadBalancer.listen(port, () => {
-      log.info(processName, `Load balancer started on port ${port}`);
+            log.info(processName, `Load balancer started on port ${port}`);
+        });
+    })
+    .catch((err) => {
+        log.error(processName, 'Error finding an available port:', err);
+        process.exit(1);
     });
-  });
 
 } else {
 
