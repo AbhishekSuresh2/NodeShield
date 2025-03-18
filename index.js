@@ -3,7 +3,7 @@
 const cluster = require('cluster');
 const os = require('os');
 const http = require('http');
-const processManager = require('./lib/pm');
+const processManager = require('./lib/pm'); 
 const log = require('./lib/logger');
 const portfinder = require('portfinder');
 
@@ -75,6 +75,7 @@ if (cluster.isMaster) {
   });
 
 } else {
+
   process.on('message', (msg) => {
     if (msg === 'shutdown') {
       log.info(processName, `Worker ${process.pid} shutting down gracefully.`);
@@ -93,27 +94,59 @@ if (cluster.isMaster) {
   switch (command) {
     case 'start':
       const script = args[1];
+      if (!script) {
+        log.error(processName, 'No script provided for the "start" command.');
+        process.exit(1);
+      }
       log.info(processName, `Starting process in ${env} mode.`);
       const clusterOption = args.includes('--cluster');
-      processManager.start(script, processName, env, clusterOption);
+      processManager.start(script, processName, env, clusterOption)
+        .catch((err) => {
+          log.error(processName, `Failed to start process: ${err.message}`);
+          process.exit(1);
+        });
       break;
 
     case 'stop':
       const stopName = args[1];
+      if (!stopName) {
+        log.error(processName, 'No process name provided for the "stop" command.');
+        process.exit(1);
+      }
       log.info(processName, `Stopping process ${stopName}.`);
-      processManager.stop(stopName);
+      processManager.stop(stopName)
+        .catch((err) => {
+          log.error(processName, `Failed to stop process: ${err.message}`);
+          process.exit(1);
+        });
       break;
 
     case 'restart':
       const restartName = args[1];
+      if (!restartName) {
+        log.error(processName, 'No process name provided for the "restart" command.');
+        process.exit(1);
+      }
       log.info(processName, `Restarting process ${restartName}.`);
-      processManager.restart(restartName);
+      processManager.restart(restartName)
+        .catch((err) => {
+          log.error(processName, `Failed to restart process: ${err.message}`);
+          process.exit(1);
+        });
       break;
 
     case 'info':
       const infoName = args[1];
+      if (!infoName) {
+        log.error(processName, 'No process name provided for the "info" command.');
+        process.exit(1);
+      }
       log.info(processName, `Fetching details for process ${infoName}.`);
-      processManager.info(infoName);
+      processManager.info(infoName)
+        .catch((err) => {
+          log.error(processName, `Failed to fetch process info: ${err.message}`);
+          process.exit(1);
+        });
       break;
 
     case 'list':
@@ -122,6 +155,7 @@ if (cluster.isMaster) {
       break;
 
     default:
-      log.error(processName, 'Unknown command. Available commands are: start, stop, restart, info, list.');
+      log.error(processName, 'Command not found! Available commands are: start, stop, restart, info, list.');
+      process.exit(1);
   }
 }
